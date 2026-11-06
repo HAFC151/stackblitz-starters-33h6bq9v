@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Tareas | API REST</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Dashboard de Gestión de Tareas</h1>
+        <p>
+          Panel de control integrado para la API REST (Arquitectura de 3 Capas)
+        </p>
+      </header>
+
+      <!-- Tarjetas de resumen rápido -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span>Total Tareas</span>
+          <h3 id="stat-total">0</h3>
+        </div>
+        <div class="stat-card">
+          <span>Pendientes</span>
+          <h3 id="stat-pendientes" style="color: var(--warning-text)">0</h3>
+        </div>
+        <div class="stat-card">
+          <span>Completadas</span>
+          <h3 id="stat-completadas" style="color: var(--success-text)">0</h3>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Formulario de Creación -->
+        <section class="card">
+          <h2>Nueva Tarea</h2>
+          <form id="form-tarea">
+            <div class="form-group">
+              <label for="titulo">Título</label>
+              <input
+                type="text"
+                id="titulo"
+                placeholder="Ej. Entregar Informe"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="descripcion">Descripción</label>
+              <input
+                type="text"
+                id="descripcion"
+                placeholder="Ej. Revisar documento de diseño"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="responsable">Responsable</label>
+              <input
+                type="text"
+                id="responsable"
+                placeholder="Ej. Harold"
+                required
+              />
+            </div>
+            <button type="submit" class="btn-primary">+ Guardar Tarea</button>
+          </form>
+        </section>
+
+        <!-- Listado -->
+        <section class="card">
+          <h2>Listado de Tareas</h2>
+          <div id="lista-tareas">
+            <p style="color: var(--text-muted)">Cargando tareas...</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = '/tareas';
+
+      async function cargarTareas() {
+        const res = await fetch(API_URL);
+        const tareas = await res.json();
+
+        // Actualizar estadísticas
+        document.getElementById('stat-total').innerText = tareas.length;
+        document.getElementById('stat-pendientes').innerText = tareas.filter(
+          (t) => t.estado === 'pendiente'
+        ).length;
+        document.getElementById('stat-completadas').innerText = tareas.filter(
+          (t) => t.estado === 'completada'
+        ).length;
+
+        const contenedor = document.getElementById('lista-tareas');
+
+        if (tareas.length === 0) {
+          contenedor.innerHTML =
+            '<p style="color: var(--text-muted); text-align: center; padding: 2rem 0;">No hay tareas en el sistema.</p>';
+          return;
+        }
+
+        contenedor.innerHTML = tareas
+          .map(
+            (t) => `
+        <div class="tarea-item">
+          <div class="tarea-info">
+            <h4>${t.titulo}</h4>
+            <p>${t.descripcion}</p>
+            <div class="tarea-meta">
+              <span class="badge ${t.estado}">${t.estado}</span>
+              <span class="responsable-tag">👤 ${t.responsable}</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn-icon toggle" onclick="cambiarEstado(${t.id}, '${
+              t.estado
+            }')">
+              ${t.estado === 'pendiente' ? '✓ Completar' : '↺ Reabrir'}
+            </button>
+            <button class="btn-icon delete" onclick="eliminarTarea(${
+              t.id
+            })">🗑️</button>
+          </div>
+        </div>
+      `
+          )
+          .join('');
+      }
+
+      document
+        .getElementById('form-tarea')
+        .addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const nueva = {
+            titulo: document.getElementById('titulo').value,
+            descripcion: document.getElementById('descripcion').value,
+            responsable: document.getElementById('responsable').value,
+          };
+
+          await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nueva),
+          });
+
+          e.target.reset();
+          cargarTareas();
+        });
+
+      async function cambiarEstado(id, estadoActual) {
+        const nuevoEstado =
+          estadoActual === 'pendiente' ? 'completada' : 'pendiente';
+        await fetch(`${API_URL}/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ estado: nuevoEstado }),
+        });
+        cargarTareas();
+      }
+
+      async function eliminarTarea(id) {
+        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        cargarTareas();
+      }
+
+      cargarTareas();
+    </script>
+  </body>
+</html>
