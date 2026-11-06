@@ -13,8 +13,8 @@ Aplicación web full-stack desarrollada bajo una **arquitectura de 3 capas** (Da
 ---
 
 ## 🌐 Enlaces del Proyecto
-* **URL Pública en Render:** [https://tu-app-en-render.onrender.com](https://tu-app-en-render.onrender.com)[cite: 16]
-* **Repositorio en GitHub:** [https://github.com/tu-usuario/tu-repositorio](https://github.com/tu-usuario/tu-repositorio)[cite: 16]
+* **URL Pública en Render:** [https://gestor-tareas-harold.onrender.com](https://gestor-tareas-harold.onrender.com)
+* **Repositorio en GitHub:** [https://github.com/HAFC151/stackblitz-starters-33h6bq9v](https://github.com/HAFC151/stackblitz-starters-33h6bq9v)
 
 ---
 
@@ -22,11 +22,11 @@ Aplicación web full-stack desarrollada bajo una **arquitectura de 3 capas** (Da
 
 | Método | Ruta | Descripción | Estado HTTP |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/tareas` | Obtiene el listado completo de tareas[cite: 6] | `200 OK` |
-| `GET` | `/tareas/:id` | Obtiene una tarea específica por su ID[cite: 4, 6] | `200 OK` / `404 Not Found`[cite: 4] |
-| `POST` | `/tareas` | Crea una nueva tarea (`titulo`, `descripcion`, `responsable`)[cite: 4, 6] | `201 Created` / `400 Bad Request`[cite: 4] |
-| `PUT` | `/tareas/:id` | Actualiza los datos o el estado de una tarea[cite: 4, 6] | `200 OK` / `404 Not Found`[cite: 4] |
-| `DELETE` | `/tareas/:id` | Elimina una tarea según su ID[cite: 4, 6] | `200 OK` / `404 Not Found`[cite: 4] |
+| `GET` | `/tareas` | Obtiene el listado completo de tareas | `200 OK` |
+| `GET` | `/tareas/:id` | Obtiene una tarea específica por su ID | `200 OK` / `404 Not Found` |
+| `POST` | `/tareas` | Crea una nueva tarea (`titulo`, `descripcion`, `responsable`) | `201 Created` / `400 Bad Request` |
+| `PUT` | `/tareas/:id` | Actualiza los datos o el estado de una tarea | `200 OK` / `404 Not Found` |
+| `DELETE` | `/tareas/:id` | Elimina una tarea según su ID | `200 OK` / `404 Not Found` |
 
 ---
 
@@ -36,4 +36,4 @@ Puedes ejecutar estos comandos desde la terminal para probar la API directamente
 
 ### 1. Obtener todas las tareas (`GET`)
 ```bash
-curl -X GET [https://tu-app-en-render.onrender.com/tareas](https://tu-app-en-render.onrender.com/tareas)
+curl -X GET [https://gestor-tareas-harold.onrender.com/tareas](https://gestor-tareas-harold.onrender.com/tareas)
